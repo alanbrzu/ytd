@@ -1,0 +1,8 @@
+create v-env:
+$ python3 -m venv <new-name>
+
+activate v-env:
+$ source <new-name>/bin/activate
+
+$ pip freeze > requirements.txt (creates requirements file)
+$ deativate
