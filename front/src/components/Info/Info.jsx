@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Info.css";
 
 function Info({
@@ -13,6 +13,24 @@ function Info({
   files,
   nextDownload,
 }) {
+  const [fields, setFields] = useState([""]);
+
+  const addField = () => {
+    const newFields = [...fields, ""];
+    setFields(newFields);
+  };
+
+  const handleChange = (val, i) => {
+    const thisVal = val.target.value;
+    const _fields = [...fields];
+    _fields.splice(i, 1, thisVal);
+    setFields(_fields);
+  };
+
+  useEffect(() => {
+    setUrls(fields);
+  }, [fields]);
+
   return (
     <div className="formCont">
       <div className="optionsCont">
@@ -28,16 +46,21 @@ function Info({
       </div>
 
       <form onSubmit={(e) => e.preventDefault()} className="form">
-        <div className="inputCont">
-          <input
-            type="text"
-            value={urls}
-            onChange={(e) => setUrls(e.target.value)}
-            placeholder="URLs (separate by comma)"
-          />
-          <p style={{ fontSize: "12px" }}>Add</p>
-        </div>
-        <div className="inputCont">
+        {fields.map((field, idx) => (
+          <div key={idx} className="inputCont">
+            <input
+              type="text"
+              value={fields[idx]}
+              onChange={(e) => handleChange(e, idx)}
+              placeholder="URLs (separate by comma)"
+            />
+            <p onClick={() => addField()} style={{ fontSize: "12px" }}>
+              Add
+            </p>
+          </div>
+        ))}
+
+        {/* <div className="inputCont">
           <input
             type="text"
             value={clips}
@@ -47,17 +70,11 @@ function Info({
         </div>
         <p style={{ fontSize: "10px", marginTop: 0 }}>
           [8:55, 11:30], [13:20, 15:45]
-        </p>
+        </p> */}
         <div style={{ display: "flex", gap: "10px", marginTop: "10px" }}>
           <button onClick={handleSubmit}>Convert</button>
           <button onClick={handleDownload}>Download</button>
         </div>
-
-        {option ? (
-          <p style={{ fontSize: "12px" }}>{option}</p>
-        ) : (
-          <p style={{ fontSize: "12px" }}>Choose options</p>
-        )}
       </form>
 
       <div className="optionsCont">

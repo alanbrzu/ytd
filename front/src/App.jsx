@@ -69,10 +69,10 @@ function App() {
   const createPython = async () => {
     setError(null);
     setDownloaded(false);
-    const _urls = listEls(urls);
+    // const _urls = listEls(urls);
     const response = await fetch("/home/mp3", {
       method: "POST",
-      body: JSON.stringify({ urls: _urls }),
+      body: JSON.stringify({ urls }),
       headers: {
         "Content-type": "application/json",
       },
@@ -114,60 +114,52 @@ function App() {
   }, [nextDownload]);
 
   useEffect(() => {
-    console.log("clips", clips);
-  }, [clips]);
+    console.log("urls", urls);
+  }, [urls]);
 
   useEffect(() => {
-    console.log(error);
-  }, [error]);
+    console.log(option);
+  }, [option]);
 
   return (
     <div className="App">
-      {files ? (
-        <div style={{ textAlign: "center" }}>
-          {!nextDownload && files.length > 0 ? (
-            <p>Click a file to download</p>
-          ) : null}
-          {!nextDownload && files.length == 0 ? (
-            <p>Convert a file first</p>
-          ) : null}
-        </div>
-      ) : null}
-      {files ? (
-        <ul
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            padding: 0,
-            gap: "10px",
-          }}
-        >
-          <span>Files</span>
-          {files.map((file, idx) => (
-            <li
-              onClick={() => setNextDownload(file)}
-              style={{ fontSize: "12px", listStyle: "none" }}
-              key={idx}
-            >
-              {file}
-            </li>
-          ))}
-        </ul>
-      ) : null}
-      {error ? (
-        <p
-          style={{
-            position: "absolute",
-            top: "332px",
-            zIndex: 1000,
-            fontSize: "14px",
-            color: "#780000",
-          }}
-        >
-          {error}
-        </p>
-      ) : null}
+      <div className="topCont">
+        {files ? (
+          <>
+            <div className="topChild">
+              <h3>Steps</h3>
+              <p>1. Choose download option</p>
+              <p>2. Enter url(s)</p>
+              <p>3. Convert video</p>
+              <p>4. Download</p>
+            </div>
+            <div className="topChild">
+              <h3>Status</h3>
+              <p>Files</p>
+              {error ? <p style={{ color: "red" }}>{error}</p> : null}
+              <ul
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  padding: 0,
+                  gap: "10px",
+                }}
+              >
+                {files.map((file, idx) => (
+                  <li
+                    onClick={() => setNextDownload(file)}
+                    style={{ fontSize: "12px", listStyle: "none" }}
+                    key={idx}
+                  >
+                    {file}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </>
+        ) : null}
+      </div>
 
       <Info
         option={option}
