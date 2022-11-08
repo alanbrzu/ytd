@@ -1,39 +1,59 @@
 .App {
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2em;
-  padding: 3em;
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  grid-template-rows: repeat(11, 1fr);
+  grid-column-gap: 0.75em;
+  grid-row-gap: 0.75em;
   position: relative;
+  padding: 3em;
 }
 
-.topCont {
-  width: 80%;
-  height: 160px;
-  display: flex;
-  gap: 1em;
-  margin-bottom: 2em;
+#child1 {
+  grid-area: 1 / 1 / 3 / 5;
+}
+#child2 {
+  grid-area: 1 / 5 / 3 / 8;
+}
+#child3 {
+  grid-area: 1 / 8 / 3 / 11;
+}
+#child2 li {
+  cursor: pointer;
+  margin-bottom: 6px;
 }
 
 .topChild {
-  width: 100%;
-  height: 100%;
-  background-color: aliceblue;
+  background-color: rgb(229, 229, 229);
   border-radius: 10px;
+  padding: 2em 1.5em;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  padding: 1em;
-  gap: 0.75em;
+  gap: 12px;
+  position: relative;
 }
 .topChild p {
-  margin: 0;
   font-size: 90%;
+  word-wrap: break-word;
 }
 .topChild h3 {
-  margin-top: 0;
-  margin-bottom: 10px;
-  font-weight: normal;
-  font-size: 110%;
+  margin-bottom: 4px;
+  font-size: 100%;
+  font-weight: 600;
+}
+.topChild h4 {
+  margin-bottom: 4px;
+  font-size: 95%;
+  font-weight: 500;
+}
+.topChild ul {
+  width: 80%;
+  word-wrap: break-word;
+  padding-left: 0.75em;
+}
+.topChild ul li {
+  list-style-type: decimal;
+  font-size: 90%;
+}
+.complete {
+  color: green;
 }

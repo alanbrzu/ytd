@@ -1,6 +1,5 @@
 .formCont {
-  width: 600px;
-  height: 460px;
+  grid-area: 3 / 1 / 10 / 11;
   background-color: rgb(229, 229, 229);
   display: flex;
   flex-direction: column;
@@ -20,6 +19,11 @@
   gap: 10px;
 }
 
+.optionsCont h3 {
+  margin-bottom: 6px;
+  font-weight: normal;
+  font-size: 90%;
+}
 .optionsCont span {
   font-size: 80%;
   cursor: pointer;
@@ -32,6 +36,7 @@
   flex-direction: column;
   align-items: center;
   gap: 4px;
+  padding: 2em 0;
 }
 
 .inputCont {

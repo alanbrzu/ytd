@@ -1,22 +1,31 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 import Info from "./components/Info/Info";
+import { Alert, Snackbar } from "@mui/material";
+import { AiOutlineDownload, AiOutlineCheck } from "react-icons/ai";
 
 function App() {
   const [files, setFiles] = useState([]);
-  const [option, setOption] = useState("");
-  const [urls, setUrls] = useState([]);
+  const [option, setOption] = useState("MP3");
+  const [urls, setUrls] = useState([""]);
   const [clips, setClips] = useState([]);
   const [downloaded, setDownloaded] = useState(false);
   const [nextDownload, setNextDownload] = useState();
-  const [error, setError] = useState(null);
+  const [alert, setAlert] = useState({
+    active: false,
+    status: "",
+    text: "",
+  });
 
   const downloadPython = () => {
     if (typeof nextDownload != "string") {
+      setAlert({
+        active: true,
+        status: "error",
+        text: "Pick a song",
+      });
       console.log("Pick a song");
-      setError("Pick a song");
     } else {
-      setError(null);
       fetch("/home/download", {
         method: "POST",
         body: JSON.stringify({ _file: nextDownload }),
@@ -35,20 +44,26 @@ function App() {
           aElement.click();
           URL.revokeObjectURL(href);
           setNextDownload(null);
-          const _fileIdx = files.indexOf(nextDownload);
-          if (files.length <= 1) {
+          setAlert({
+            active: true,
+            status: "success",
+            text: "Downloaded successfully",
+          });
+          if (files[0].length <= 1) {
             setFiles([]);
           } else {
-            const _newFiles = files.splice(_fileIdx, 1);
+            const _fakeFiles = files[0];
+            const _fileIdx = _fakeFiles.indexOf(nextDownload);
+            const _newFiles = _fakeFiles.splice(_fileIdx, 1);
             console.log(_fileIdx);
-            setFiles(_newFiles);
+            // setFiles(_newFiles);
           }
         });
     }
   };
 
+  // Convert API call
   const createPython = async () => {
-    setError(null);
     setDownloaded(false);
     const response = await fetch("/home/mp3", {
       method: "POST",
@@ -63,83 +78,142 @@ function App() {
       for (let i = 0; i < data.length; i++) {
         _arr.push(data[i]);
       }
-      setFiles(_arr[0]);
+      setAlert({
+        active: true,
+        status: "success",
+        text: "Sucessfully converted",
+      });
+      setFiles([...files, ..._arr[0]]);
       setDownloaded(true);
     } catch (error) {
+      setAlert({
+        active: true,
+        status: "error",
+        text: "Conversion Error",
+      });
       console.log(error);
     }
   };
 
+  // Convert handler
   const handleSubmit = async () => {
     if (option == "MP3" && urls.length > 0) {
       createPython();
-      setUrls([]);
+      setUrls([""]);
     } else {
       console.log("Choose option");
-      setError("Choose option and enter URL");
+      setAlert({
+        active: true,
+        status: "error",
+        text: "Choose option and enter URL",
+      });
     }
   };
 
+  // Download handler
   const handleDownload = async () => {
     if (files.length > 0) {
       downloadPython();
     } else {
+      setAlert({
+        active: true,
+        status: "error",
+        text: "No files",
+      });
       console.log("No files");
-      setError("No files");
     }
   };
+
+  useEffect(() => {
+    console.log("files", files);
+  }, [files]);
 
   useEffect(() => {
     console.log("nextDownload", nextDownload);
   }, [nextDownload]);
 
-  useEffect(() => {
-    console.log("urls", urls);
-  }, [urls]);
-
-  useEffect(() => {
-    console.log(option);
-  }, [option]);
-
   return (
     <div className="App">
-      <div className="topCont">
-        {files ? (
-          <>
-            <div className="topChild">
-              <h3>Steps</h3>
-              <p>1. Choose download option</p>
-              <p>2. Enter url(s)</p>
-              <p>3. Convert video</p>
-              <p>4. Download</p>
-            </div>
-            <div className="topChild">
-              <h3>Status</h3>
-              <p>Files</p>
-              {error ? <p style={{ color: "red" }}>{error}</p> : null}
-              <ul
+      <>
+        {/* Steps */}
+        <div className="topChild" id="child1">
+          <h3>Steps</h3>
+          <p className={`${option != "" ? "complete" : ""}`}>
+            1. Choose download option (default: MP3)
+          </p>
+          <p className={`${urls[0].length > 0 ? "complete" : ""}`}>
+            2. Enter URL(s)
+          </p>
+          <p className={`${files.length > 0 ? "complete" : ""}`}>
+            3. Convert video
+          </p>
+          <p className={`${nextDownload != undefined ? "complete" : ""}`}>
+            4. Select video to download
+          </p>
+          <p>5. Download</p>
+        </div>
+        {/* Files */}
+        <div className="topChild" id="child2">
+          <h3>Files</h3>
+          <h4>Converted files:</h4>
+          {files[0] ? (
+            <ul>
+              {files.map((file, idx) => (
+                <li onClick={() => setNextDownload(file)} key={idx}>
+                  {file}
+                </li>
+              ))}
+            </ul>
+          ) : null}
+        </div>
+        {/* Queue */}
+        <div className="topChild" id="child3">
+          <h3>Queue</h3>
+          <h4>Ready to download:</h4>
+          {files.length > 0 && nextDownload ? (
+            <>
+              <p>{nextDownload}</p>
+              <div
                 style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  padding: 0,
-                  gap: "10px",
+                  position: "absolute",
+                  bottom: "16px",
+                  right: "32px",
+                  cursor: "pointer",
                 }}
               >
-                {files.map((file, idx) => (
-                  <li
-                    onClick={() => setNextDownload(file)}
-                    style={{ fontSize: "12px", listStyle: "none" }}
-                    key={idx}
-                  >
-                    {file}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </>
-        ) : null}
-      </div>
+                <AiOutlineDownload
+                  onClick={handleDownload}
+                  style={{ fontSize: "28px" }}
+                />
+              </div>
+            </>
+          ) : (
+            <p>Choose file</p>
+          )}
+        </div>
+      </>
+      <Snackbar
+        style={{ height: "80px" }}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        open={alert.active}
+        autoHideDuration={10000}
+        onClose={() =>
+          setAlert({ ...alert, active: false, status: "", text: "" })
+        }
+      >
+        <Alert
+          variant="filled"
+          severity={alert.status}
+          style={{
+            paddingTop: "0.75em",
+            paddingBottom: "0.75em",
+            paddingLeft: "1em",
+            paddingRight: "2em",
+          }}
+        >
+          <p>{alert.text}</p>
+        </Alert>
+      </Snackbar>
 
       <Info
         option={option}

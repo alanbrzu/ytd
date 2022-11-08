@@ -28,10 +28,10 @@ def download_mp3_from_yt(url):
         print(f"Could not get video length for {id}. Skipping download.")
         return
 
-    # If time > 10 min, do not download
+    # If time > 4hr
     # MAYBE DELETE THIS
-    if yt.length > 600:
-        print(f"video_id {id} is longer than 10 minutes, will not download.")
+    if yt.length > 14400:
+        print(f"video_id {id} is longer than 4 hours, will not download.")
         return
 
     video = yt.streams.filter(only_audio=True).first()
