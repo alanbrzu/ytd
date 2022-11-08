@@ -49,14 +49,13 @@ function App() {
             status: "success",
             text: "Downloaded successfully",
           });
-          if (files[0].length <= 1) {
+          if (files.length <= 1) {
             setFiles([]);
           } else {
-            const _fakeFiles = files[0];
-            const _fileIdx = _fakeFiles.indexOf(nextDownload);
-            const _newFiles = _fakeFiles.splice(_fileIdx, 1);
+            const _fileIdx = files.indexOf(nextDownload);
+            const _newFiles = files.splice(_fileIdx, 1);
             console.log(_fileIdx);
-            // setFiles(_newFiles);
+            console.log(_newFiles);
           }
         });
     }
