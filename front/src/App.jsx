@@ -11,15 +11,6 @@ function App() {
   const [nextDownload, setNextDownload] = useState();
   const [error, setError] = useState(null);
 
-  const listEls = (el) => {
-    const _newArr = el.split(",");
-    const newEl = [];
-    for (let i = 0; i < _newArr.length; i++) {
-      newEl.push(_newArr[i].trim());
-    }
-    return newEl;
-  };
-
   const downloadPython = () => {
     if (typeof nextDownload != "string") {
       console.log("Pick a song");
@@ -56,20 +47,9 @@ function App() {
     }
   };
 
-  const fetchPython = async () => {
-    const response = await fetch("/home");
-    try {
-      const data = await response.json();
-      console.log(data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   const createPython = async () => {
     setError(null);
     setDownloaded(false);
-    // const _urls = listEls(urls);
     const response = await fetch("/home/mp3", {
       method: "POST",
       body: JSON.stringify({ urls }),

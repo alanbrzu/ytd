@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./Info.css";
+import { AiOutlinePlus } from "react-icons/ai";
 
 function Info({
   option,
@@ -54,12 +55,12 @@ function Info({
               onChange={(e) => handleChange(e, idx)}
               placeholder="URLs (separate by comma)"
             />
-            <p onClick={() => addField()} style={{ fontSize: "12px" }}>
-              Add
-            </p>
+            <AiOutlinePlus
+              onClick={() => addField()}
+              style={{ fontSize: "18px" }}
+            />
           </div>
         ))}
-
         {/* <div className="inputCont">
           <input
             type="text"

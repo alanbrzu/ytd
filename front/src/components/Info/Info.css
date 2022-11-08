@@ -35,11 +35,12 @@
 }
 
 .inputCont {
-  width: 70%;
-  height: 30px;
+  width: 60%;
+  height: 36px;
   display: flex;
   align-items: center;
   gap: 10px;
+  margin-bottom: 6px;
 }
 .inputCont input {
   width: 100%;
